@@ -11,7 +11,8 @@
                #:mito
                #:yason
                #:ironclad
-               #:jose)
+               #:jose
+               #:clack-handler-hunchentoot)
   :components ((:module "src"
                 :components
                 ((:file "main")
