@@ -1,12 +1,15 @@
 (defsystem "rest-api"
   :version "0.1.0"
-  :defsystem-depends-on (:deploy)
+  :defsystem-depends-on (:deploy
+                         :clack-handler-hunchentoot)
   :build-operation "deploy-op"
   :build-pathname "rest-api"
   :entry-point "rest-api::main"
   :author ""
   :license ""
-  :depends-on (#:clack
+  :depends-on (#:quicklisp
+               #:asdf
+               #:clack
                #:ningle
                #:mito
                #:yason
