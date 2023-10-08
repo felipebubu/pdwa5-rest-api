@@ -17,11 +17,6 @@
        (progn ,@body)
        (make-json-object-key-value "error" "invalid token")))
 
-(defmacro with-authentication (request &body body)
-  `(if (authenticate ,request)
-       (progn (format nil "~A" (authenticated ,request)))
-       (print (authenticate ,request))))
-
 (defmacro with-user-permission-validation (request params &body body)
   `(let ((jwt (authenticate ,request)))
      (if (or (string= 

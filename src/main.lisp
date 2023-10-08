@@ -8,12 +8,10 @@
 
 (defvar *key* (ironclad:ascii-string-to-byte-array "secret"))
 
-(defvar *token* 
-  (jose:encode :hs256 *key* '(("hello" . "world"))))
-
 (defvar *app* (make-instance 'ningle:app))
+(defvar *server* nil)
 (defun main () 
-  (defvar *server* (clack:clackup *app*))
+  (setf *server* (clack:clackup *app*))
 
   (handler-case (bt:join-thread (find-if (lambda (th)
                                            (search "hunchentoot" (bt:thread-name th)))
