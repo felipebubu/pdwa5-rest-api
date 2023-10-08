@@ -1,68 +1,42 @@
-ARG ROSWELL_IMAGE=fukamachi/roswell
-ARG ROSWELL_VERSION
-ARG OS=debian
-FROM fukamachi/roswell:latest-$OS AS build-env
+# Stage 1: Build the PDWA5 Rest API application using fukamachi/sbcl
+FROM fukamachi/sbcl AS build
 
-ARG OS
-ARG VERSION
+WORKDIR /app
 
-ADD https://github.com/sbcl/sbcl/archive/sbcl-$VERSION.tar.gz sbcl.tar.gz
+# Install Git
+RUN apt-get update && apt-get install -y git
 
-# hadolint ignore=DL3003,DL3008,DL3018,DL3019,DL4006
-RUN set -x; \
-  arch="$(case $(uname -m) in amd64|x86_64) echo x86-64;; aarch64) echo arm64;; *) uname -m ;; esac)"; \
-  if [ "$OS" = "alpine" ]; then \
-    apk add --update build-base linux-headers zstd-dev; \
-  else \
-    apt-get update && apt-get -y install --no-install-recommends \
-      build-essential \
-      zlib1g-dev \
-      libzstd-dev \
-      time; \
-  fi; \
-  ros install sbcl-bin/2.2.7 && \
-  tar xvfz sbcl.tar.gz && rm sbcl.tar.gz && cd "sbcl-sbcl-${VERSION}" && \
-  echo "\"$VERSION\"" > version.lisp-expr && \
-  (sh make.sh \
-      --with-sb-core-compression \
-      "--xc-host=ros -L sbcl-bin without-roswell=t --no-rc run" \
-      "--prefix=$HOME/.roswell/impls/$arch/linux/sbcl-bin/$VERSION/" || true) \
-    && sh install.sh && \
-    rm -f "/root/.roswell/impls/$arch/linux/sbcl-bin/$VERSION/lib/sbcl/sbcl.core.old" \
-      && rm -f "/root/.roswell/impls/$arch/linux/sbcl-bin/$VERSION/bin/sbcl.old" \
-      && find "/root/.roswell/impls/$arch/linux/sbcl-bin" -maxdepth 1 -mindepth 1 | grep -v "/sbcl-bin/$VERSION$" | xargs rm -rf || true \
-      && rm -rf "/root/.roswell/impls/log"
+# Clone the PDWA5 Rest API repository
+RUN git clone https://github.com/felipebubu/pdwa5-rest-api.git
 
-FROM $ROSWELL_IMAGE:$ROSWELL_VERSION-$OS
-# hadolint ignore=DL3010
-COPY --from=build-env /root/.roswell/impls /root/.roswell/impls
+# Stage 2: Create a temporary image to compile the application
+FROM fukamachi/sbcl AS compile
 
-ARG BUILD_DATE
-ARG VCS_REF
-ARG OS
-ARG VERSION
+WORKDIR /app/pdwa5-rest-api
 
-LABEL org.label-schema.build-date=$BUILD_DATE \
-      org.label-schema.vcs-ref=$VCS_REF \
-      org.label-schema.vcs-url="https://github.com/fukamachi/dockerfiles" \
-      org.label-schema.version=$VERSION \
-      org.label-schema.schema-version="1.0"
+# Copy the source code
+COPY --from=build /app/pdwa5-rest-api /app/pdwa5-rest-api
 
-# hadolint ignore=DL3018
-RUN set -x; \
-  if [ "$OS" = "alpine" ]; then \
-    apk add --update --no-cache zstd-libs; \
-  fi; \
-  printf "setup.time\t0\t%s\n" "$(( $(date +%s) + 2208988800 ))" > ~/.roswell/config && \
-  printf "sbcl-bin.version\t0\t%s\n" "$VERSION" >> ~/.roswell/config && \
-  printf "default.lisp\t0\tsbcl-bin\n" >> ~/.roswell/config && \
-  ros setup && \
-  ros -e '(mapc (function ql-dist:uninstall) (ql-dist:installed-releases t))' \
-    && rm -f /root/.roswell/lisp/quicklisp/tmp/quicklisp.tar \
-    && rm -rf /root/.roswell/archives/* /root/.roswell/src/sbcl-* /root/.cache/common-lisp/sbcl-*/root/.roswell/lisp/quicklisp/dists/quicklisp/software
+# Build the application (assuming the build process is inside /app/pdwa5-rest-api)
+RUN sbcl --eval '(asdf:make :rest-api)'
 
-RUN set -x; \
-  printf '#!/bin/sh\nexec ros run -- "$@"\n' > /usr/local/bin/sbcl \
-  && chmod u+x /usr/local/bin/sbcl
+# Stage 3: Create the final runtime image using Arch Linux
+FROM archlinux
 
-ENTRYPOINT ["/usr/local/bin/sbcl"]
+WORKDIR /app/pdwa5-rest-api
+
+# Copy the built application from the compile stage
+COPY --from=compile /app/pdwa5-rest-api/bin/rest-api /app/pdwa5-rest-api/bin/rest-api
+
+# Copy libsqlite3.so.0.8.6 from the repository's bin folder
+COPY --from=compile /app/pdwa5-rest-api/bin/libsqlite3.so.0.8.6 /app/pdwa5-rest-api/bin/libsqlite3.so.0.8.6
+
+# Copy libcrypto.so.3 and libssl.so.3 from the repository's bin folder
+COPY --from=compile /app/pdwa5-rest-api/bin/libcrypto.so.3 /app/pdwa5-rest-api/bin/libcrypto.so.3
+COPY --from=compile /app/pdwa5-rest-api/bin/libssl.so.3 /app/pdwa5-rest-api/bin/libssl.so.3
+
+# Expose port 5000
+EXPOSE 5000
+
+# Define the command to execute the application
+CMD ["/app/pdwa5-rest-api/bin/rest-api"]
