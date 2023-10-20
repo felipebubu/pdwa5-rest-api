@@ -41,121 +41,12 @@ Requisições para a API devem seguir os padrões:
 | `400` | Dados inválidos em relação à necessidade do sistema |
 | `401` | Dados de acesso inválidos/inexistentes |
 
-# Autenticação
-
-## POST endpoints
-
-### Registra um administrador do sistema, necessário para a obtenção do token
-### [POST /api/admin/register]
-+ Parameters
-    + name - *nome do admin*
-    + password - *senha do admin*
-
-+ Request (application/json)
-
-+ Response 200 (application/json)
-    + Body
-```
-{
-    "name": "admin",
-    "password": "admin"
-}
-```
-
-+ Response 400 (application/json)
-    + Body
-```
-{
-    "erro": 1,
-    "mensagem": "Administrador criado com sucesso"
-}
-```
-
-+ Response 400 (application/json)
-    + Body
-```
-{
-    "erro": 1,
-    "mensagem": "{administrador} já existe"
-}
-```
-
-### Gera um token que deve ser usado posteriormente no header 'X-Access-Token' em todas as requisições
-### [POST /api/auth/login]
-+ Parameters
-    + name - *nome do admin*
-    + password - *senha do admin*
-
-+ Request (application/json)
-
-    + Headers
-
-            X-Access-Token: token
-
-+ Response 200 (application/json)
-    + Body
-```
-{
-    "autenticação": "true",
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyIxIjoxLCJpYXQiOjE2NTYzMjExNTEsImV4cCI6MTY1NjMyNDc1MX0.4NZGpHt5tk4CGBO1u6i21WFR9m93dQ4h2qsdUMeMK2A"
-}
-```
-
-+ Response 400 (application/json)
-    + Body
-```
-{
-    "erro": 8,
-    "mensagem": "Não foi possível autenticar seu token"
-}
-```
-+ Response 401 (application/json)
-+ Resposta padrão para toda requisição sem token
-    + Body
-```
-{
-    erro: 7,
-    mensagem:"Nenhuma identificação providenciada"
-}
-```
-
-### Muda a senha de um administrador do sistema
-### [POST /api/admin/password]
-+ Parameters
-    + name - *nome do admin*
-    + password - *senha do admin*
-
-+ Request (application/json)
-
-    + Headers
-
-            X-Access-Token: token
-
-+ Response 200 (application/json)
-    + Body
-```
-{
-    "sucesso": 1,
-    "mensagem": "Senha trocada com sucesso"
-}
-```
-
-+ Response 400 (application/json)
-    + Body
-```
-{
-    "erro": 1,
-    "mensagem": "{administrador} já existe"
-}
-```
-
-
 # Usuário
 
 ## GET endpoints
 
 ### Retorna todos os usuários ativos do sistema que participam de pelo menos um grupo de acesso 
-### [GET /api/user/all_active]
+### [GET /user/{id}]
 
 + Request (application/json)
 
@@ -166,85 +57,72 @@ Requisições para a API devem seguir os padrões:
 + Response 200 (application/json)
     + Body
 ```
-[
     {
-        "name": "Simone",
-        "surname": "Márcia",
-        "email": "simone_marcia_peixoto@atualmarcenaria.com.br",
-        "active": 1,
-        "user_team": "Office"
+        "name": "felipe",
+        "password": "senha-forte",
+        "email": "felipe@felipe.com",
+        "status": "active",
+        "kind": "admin"
     },
-    {
-        "name": "Ryan",
-        "surname": "Theo",
-        "email": "ryan-pereira98@hormail.com",
-        "active": 1,
-        "user_team": "Logístico"
-    }
-]
-```
-
-### Retorna todas as informações de um usuário
-### [GET /api/user/{email}/info]
-
-+ Request (application/json)
-
-    + Headers
-
-            X-Access-Token: token
-
-+ Response 200 (application/json)
-    + Body
-```
-[
-    "enzoleandrocastro@yahoo.de",
-    "simone_marcia_peixoto@atualmarcenaria.com.br",
-    "ryan-pereira98@hormail.com"
-]
-```
-+ Response 400 (application/json)
-+ caso o usuário não exista
-    + Body
-```
-{
-    "código": 6,
-    "mensagem": "{usuário} não existe no banco de dados"
-}
-```
-
-### Retorna todos os grupos que um usuário faz parte
-### [GET /api/user/{email}/teams]
-
-+ Request (application/json)
-
-    + Headers
-
-            X-Access-Token: token
-
-+ Response 200 (application/json)
-    + Body
-```
-[
-    "Crédito",
-    "Office"
-]
 ```
 
 ## POST endpoints
 
-### Cria um usuário caso ele não exista e o e-mail inserido seja válido
-### [POST /api/user/create]
-+ Parameters
-    + name - *primeiro nome do usuário*
-    + surname - *segundo nome do usuário*
-    + email - *e-mail do usuário*
-
+### Registra um usuário caso o email não esteja cadastrado
+### [POST /user/sign-up]
 + Request (application/json)
+    + Body
+        + Parameters
+            + name - *nome do usuário*
+            + password - *senha do usuário*
+            + email - *e-mail do usuário*
+            + kind - *tipo de usuário, podendo ser "admin", "buyer", ou "seller"*
++ Response 200 (application/json)
+    + Body
+```
+{
+    "successo": 1,
+    "message": "Usuário criado com sucesso"
+}
+```
 
-    + Headers
++ Response 400 (application/json)
+    + Body
+```
+{
+    "erro": 2,
+    "mensagem":"Nome inválido"
+},
+```
 
-            X-Access-Token: token
++ Response 200 (application/json)
+    + Body
+```
+{
+    "erro": 3,
+    "mensagem":"Sobrenome inválido"
+},
+```
 
++ Response 400 (application/json)
+    + Body
+```
+{
+    "erro": 1,
+    "mensagem":"{e-mail} já existe"
+},
+```
+## PUT endpoints
+
+### Retorna um token de autenticação caso o e-mail e a senha estejam cadastrados em um usuário
+### [PUT /user/{id}]
++ Request (application/json)
+    + Body
+        + Parameters
+            + name - *nome do usuário*
+            + password - *senha do usuário*
+            + email - *e-mail do usuário*
+            + kind - *tipo de usuário, podendo ser "admin", "buyer", ou "seller"*
 + Response 200 (application/json)
     + Body
 ```
@@ -284,7 +162,7 @@ Requisições para a API devem seguir os padrões:
 ## DELETE endpoints
 
 ### Remove um usuário do sistema
-### [DELETE /api/user/{usuário}]
+### [DELETE /user/{id}]
 
 + Request (application/json)
 
@@ -309,7 +187,7 @@ Requisições para a API devem seguir os padrões:
 },
 ```
 
-# Grupo de acesso
+# Administrador
 
 ## GET endpoints
 
