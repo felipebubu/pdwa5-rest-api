@@ -15,5 +15,14 @@
                      ("kind" . ,(user-kind user-entity))
                      ("has-logged-as-admin" . "true"))))))
 
+
+
+(defun admin-create (user-id area-of-expertise)
+  (mito:insert-dao
+    (make-instance 'admin 
+                   :area-of-expertise area-of-expertise
+                   :user-id user-id
+                   :start-date (local-time:format-timestring nil (local-time:now) :format '(:year "-" :month "-" :day)))))
+
 (defun admin-get-users ()
   (mito:retrieve-dao 'user))

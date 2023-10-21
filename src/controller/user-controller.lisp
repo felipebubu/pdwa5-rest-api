@@ -5,8 +5,10 @@
 (setf (ningle:route *app* "/user/sign-up" :method :POST)
       #'(lambda (params)
           (with-database-error-handling
-            (user-create params)
-            (setf (lack.response:response-status ningle:*response*) 201))))
+            (let ((user-created (user-create params)))
+              (setf (lack.response:response-status ningle:*response*) 201)
+              (yason:with-output-to-string* ()
+                (yason:encode-object user-created))))))
 
 (setf (ningle:route *app* "/user/:id" :method :GET)
       #'(lambda (params)
@@ -29,5 +31,5 @@
 (setf (ningle:route *app* "/user/:id" :method :DELETE)
       #'(lambda (params)
           (with-database-error-handling
-            (with-user-permission-validation ningle:*request*
+            (with-user-permission-validation ningle:*request* params
                 (user-soft-delete params)))))

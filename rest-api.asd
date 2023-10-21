@@ -12,23 +12,24 @@
                #:yason
                #:ironclad
                #:jose
+               #:local-time
                #:clack-handler-hunchentoot)
   :components ((:module "src"
                 :components
                 ((:file "main")
+                 (:module "utils"
+                  :components ((:file "json-util")
+                               (:file "error-handling")))
+                 (:module "service"
+                  :components ((:file "user-service")
+                               (:file "admin-service")
+                               (:file "auth-service")))
                  (:module "model"
                   :components ((:file "user")
                                (:file "admin")))
                  (:module "controller"
                   :components ((:file "user-controller")
                                (:file "admin-controller")))
-                 (:module "service"
-                  :components ((:file "user-service")
-                               (:file "auth-service")
-                               (:file "admin-service")))
-                 (:module "utils"
-                  :components ((:file "json-util")
-                               (:file "error-handling")))
                  )))
   :description ""
   :in-order-to ((test-op (test-op "rest-api/tests"))))

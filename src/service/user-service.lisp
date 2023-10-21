@@ -2,8 +2,8 @@
   (:use :cl))
 (in-package :rest-api)
 
-(defun map-param-to-property (username params)
-  (cdr (assoc username params :test #'string=)))
+(defun map-param-to-property (param params)
+  (cdr (assoc param params :test #'string=)))
 
 (defun map-params-to-user (params)
   (make-instance 'user 
@@ -16,7 +16,12 @@
                  :id (cdr (assoc :id params))))
 
 (defun user-create (params)
-  (mito:insert-dao (map-params-to-user params)))
+  (let ((user (mito:insert-dao (map-params-to-user params))))
+    (let ((user-created (mito:find-dao 'user :email (user-email user))))
+      (if (string= (map-param-to-property "kind" params) "admin")
+          (admin-create (user-id user-created) 
+                        (map-param-to-property "area-of-expertise" params)))
+      user-created)))
 
 (defun user-read (params)
   (mito:find-dao 'user :id (cdr (assoc :id params))))
