@@ -30,7 +30,8 @@
 
 (defmacro with-logged-as-admin (request &body body)
   `(let ((jwt (authenticate ,request)))
-     (if (eq 
+     (print (assoc "has-logged-as-admin" jwt :test #'string=))
+     (if (string=
           (cdr (assoc "has-logged-as-admin" jwt :test #'string=)) "true")
          (progn ,@body)
          (no-admin-error))))

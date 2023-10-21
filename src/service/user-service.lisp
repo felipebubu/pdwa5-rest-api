@@ -11,7 +11,7 @@
                  :email (map-param-to-property "email" params)
                  :password (hash-password 
                             (map-param-to-property "password" params))
-                 :status (map-param-to-property "status" params)
+                 :status "active"
                  :kind (map-param-to-property "kind" params)
                  :id (cdr (assoc :id params))))
 

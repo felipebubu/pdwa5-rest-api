@@ -9,6 +9,6 @@
 (setf (ningle:route *app* "/admin/users" :method :GET)
       #'(lambda (params)
           (declare (ignore params))
-          (with-logged-as-admin
+          (with-logged-as-admin ningle:*request*
               (yason:with-output-to-string* () 
                 (yason:encode (admin-get-users))))))
