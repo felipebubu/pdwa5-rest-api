@@ -32,10 +32,6 @@
 (defun hash-password (password)
   (ironclad:pbkdf2-hash-password-to-combined-string (babel:string-to-octets password)))
 
-(defun check-password (password hash)
-  (ironclad:pbkdf2-check-password (babel:string-to-octets password)
-                                  hash))
-
 (defun user-login (params)
   (let ((user-entity  
           (mito:find-dao 'user :email 

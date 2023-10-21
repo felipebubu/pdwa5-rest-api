@@ -17,7 +17,8 @@
    (kind :col-type (:varchar 64)
          :acessor user-kind))
   (:primary-key id)
-  (:auto-pk nil))
+  (:auto-pk nil)
+  (:unique-keys email))
 
 (defmethod yason:encode-slots progn ((user user))
   (yason:encode-object-element "name" (user-name user))
@@ -26,4 +27,7 @@
   (yason:encode-object-element "status" (user-status user))
   (yason:encode-object-element "kind" (user-status user)))
 
-(mito:table-definition 'user)
+(defmethod yason:encode ((user user) &optional (stream *standard-output*))
+  (yason:with-output (stream)
+    (yason:with-object ()
+      (yason:encode-slots user))))

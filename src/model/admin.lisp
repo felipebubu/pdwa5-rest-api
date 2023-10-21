@@ -7,6 +7,4 @@
    (area-of-expertise :col-type (:varchar 64))
    (user-id :references user)))
 
-
-
 (mito:table-definition 'admin)

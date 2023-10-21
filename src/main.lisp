@@ -1,8 +1,9 @@
 (defpackage rest-api
-  (:use :cl))
+  (:use :cl)
+  (:export :main))
 (in-package :rest-api)
 
-(mito:connect-toplevel :sqlite3 :database-name "rest-api.db")
+(mito:connect-toplevel :sqlite3 :database-name "./rest-api.db")
 (setf mito:*auto-migration-mode* t)
 (setf mito:*migration-keep-temp-tables* nil)
 
@@ -10,9 +11,8 @@
 
 (defvar *app* (make-instance 'ningle:app))
 (defvar *server* nil)
-(defun main () 
-  (setf *server* (clack:clackup *app* :address "0.0.0.0"))
-
+(defun main () (setf *server* (clack:clackup *app*))
+  (declaim (optimize (debug 3)))
   (handler-case (bt:join-thread (find-if (lambda (th)
                                            (search "hunchentoot" (bt:thread-name th)))
                                          (bt:all-threads)))

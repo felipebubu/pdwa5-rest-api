@@ -22,7 +22,19 @@
      (if (or (string= 
               (write-to-string (cdr (assoc "id" jwt :test #'string=))) 
                 (cdr (assoc :id ,params)))
-             (eq (cdr (assoc "kind" jwt :test #'string=)) "admin"))
+             (string= (cdr 
+                  (assoc "has-logged-as-admin" 
+                         jwt :test #'string=)) "true"))
           (progn ,@body)
-          (make-json-object-key-value 
-           "error" "only admins may update other users settings"))))
+          (auth-error))))
+
+(defmacro with-logged-as-admin (request &body body)
+  `(let ((jwt (authenticate ,request)))
+     (if (eq 
+          (cdr (assoc "has-logged-as-admin" jwt :test #'string=)) "true")
+         (progn ,@body)
+         (no-admin-error))))
+
+(defun check-password (password hash)
+  (ironclad:pbkdf2-check-password (babel:string-to-octets password)
+                                  hash))

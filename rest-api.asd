@@ -6,9 +6,7 @@
   :entry-point "rest-api::main"
   :author ""
   :license ""
-  :depends-on (#:quicklisp
-               #:asdf
-               #:clack
+  :depends-on (#:clack
                #:ningle
                #:mito
                #:yason
@@ -22,12 +20,15 @@
                   :components ((:file "user")
                                (:file "admin")))
                  (:module "controller"
-                  :components ((:file "user-controller")))
+                  :components ((:file "user-controller")
+                               (:file "admin-controller")))
                  (:module "service"
                   :components ((:file "user-service")
-                               (:file "auth-service")))
+                               (:file "auth-service")
+                               (:file "admin-service")))
                  (:module "utils"
-                  :components ((:file "json-util")))
+                  :components ((:file "json-util")
+                               (:file "error-handling")))
                  )))
   :description ""
   :in-order-to ((test-op (test-op "rest-api/tests"))))
