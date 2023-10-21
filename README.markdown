@@ -1,11 +1,12 @@
-# API RESTful para controle de usuários e grupos de acesso
-API RESTful que fornece a criação, visualização, inserção e remoção de usuários, grupos de acesso e relações entre os dois.
-
-Pode ser usada em uma rede intranet ou internet, contudo, é necessário um token para fazer requisições caso elas venham de fora da rede local.
+# API RESTful de sebo online
+API RESTful que fornece cadastro de usuários, livros e transações.
 
 ## Pré-requisitos
 * SBCL (Steel Bank Common Lisp)
 * Quicklisp
+  
+## Link da aplicação
+http://vps49843.publiccloud.com.br:5000
 
 ## Usando a aplicação localmente no GNU/Linux
 Para usar a aplicação, é necessário o SBCL, um compilador de Common Lisp. Com ele instalado, é possível instalar o Quicklisp, que é uma ferramenta para administrar as dependências. Após instalar ambos, rode o quicklisp com o seguinte comando:
@@ -49,21 +50,18 @@ Requisições para a API devem seguir os padrões:
 ### [GET /user/{id}]
 
 + Request (application/json)
-
     + Headers
-
-            X-Access-Token: token
-
+        + Authorization: {token}
 + Response 200 (application/json)
     + Body
 ```
-    {
-        "name": "felipe",
-        "password": "senha-forte",
-        "email": "felipe@felipe.com",
-        "status": "active",
-        "kind": "admin"
-    },
+{
+    "id":1,
+    "name":"felipe",
+    "email":"seller@seller.com",
+    "status":"ativo",
+    "kind":"seller",
+}
 ```
 
 ## POST endpoints
@@ -81,42 +79,33 @@ Requisições para a API devem seguir os padrões:
     + Body
 ```
 {
-    "successo": 1,
-    "message": "Usuário criado com sucesso"
+    "id":1,
+    "name":"felipe",
+    "email":"seller@seller.com",
+    "status":"ativo",
+    "kind":"seller"
 }
 ```
 
-+ Response 400 (application/json)
+### Retorna um token com poder de usuário normal
+### [POST /user/login]
++ Request (application/json)
     + Body
-```
-{
-    "erro": 2,
-    "mensagem":"Nome inválido"
-},
-```
-
+        + Parameters
+            + email - *e-mail do usuário*
+            + password - *senha do usuário*
 + Response 200 (application/json)
     + Body
 ```
-{
-    "erro": 3,
-    "mensagem":"Sobrenome inválido"
-},
-```
-
-+ Response 400 (application/json)
-    + Body
-```
-{
-    "erro": 1,
-    "mensagem":"{e-mail} já existe"
-},
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwia2luZCI6InNlbGxlciJ9.cMNAieYJiZgOewKulhyoIqUiikhnrhjz6mr8LpRVdHo
 ```
 ## PUT endpoints
 
-### Retorna um token de autenticação caso o e-mail e a senha estejam cadastrados em um usuário
+### Edita o perfil do usuário
 ### [PUT /user/{id}]
 + Request (application/json)
+    + Headers
+        + Authorization: {token}
     + Body
         + Parameters
             + name - *nome do usuário*
@@ -127,36 +116,8 @@ Requisições para a API devem seguir os padrões:
     + Body
 ```
 {
-    "successo": 1,
-    "message": "Usuário criado com sucesso"
+
 }
-```
-
-+ Response 400 (application/json)
-    + Body
-```
-{
-    "erro": 2,
-    "mensagem":"Nome inválido"
-},
-```
-
-+ Response 200 (application/json)
-    + Body
-```
-{
-    "erro": 3,
-    "mensagem":"Sobrenome inválido"
-},
-```
-
-+ Response 400 (application/json)
-    + Body
-```
-{
-    "erro": 1,
-    "mensagem":"{e-mail} já existe"
-},
 ```
 
 ## DELETE endpoints
@@ -165,28 +126,15 @@ Requisições para a API devem seguir os padrões:
 ### [DELETE /user/{id}]
 
 + Request (application/json)
-
     + Headers
-
-            X-Access-Token: token
-
+        + Authorization: {token}
 + Response 200 (application/json)
     + Body
 ```
 {
-    "successo": 1,
-    "message": "{usuário} deletado com sucesso"
-},
-```
-+ Response 400 (application/json)
-    + Body
-```
-{
-    "erro": 4,
-    "mensagem":"{usuário} não existe"
-},
-```
 
+}
+```
 # Administrador
 
 ## GET endpoints
@@ -195,11 +143,8 @@ Requisições para a API devem seguir os padrões:
 ### [GET /admin/users]
 
 + Request (application/json)
-
     + Headers
-
-            X-Access-Token: token
-
+        + Authorization: {token}
 + Response 200 (application/json)
     + Body
 ```
@@ -231,7 +176,7 @@ Requisições para a API devem seguir os padrões:
 ## POST endpoints
 
 ### Retorna um token com poderes administrativos
-### [POST /api/team/create]
+### [POST /admin/login"]
 + Parameters
     + email - *e-mail do administrador*
     + password - *senha do administrador*
@@ -240,16 +185,5 @@ Requisições para a API devem seguir os padrões:
 + Response 200 (application/json)
     + Body
 ```
-{
-    "successo": 1,
-    "message": "Usuário criado com sucesso"
-}
-```
-+ Response 400 (application/json)
-    + Body
-```
-{
-    "erro": 2,
-    "mensagem":"Nome inválido"
-},
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwia2luZCI6InNlbGxlciJ9.cMNAieYJiZgOewKulhyoIqUiikhnrhjz6mr8LpRVdHo
 ```
