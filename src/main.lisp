@@ -11,7 +11,7 @@
 
 (defvar *app* (make-instance 'ningle:app))
 (defvar *server* nil)
-(defun main () (setf *server* (clack:clackup *app* :adress "0.0.0.0"))
+(defun main () (setf *server* (clack:clackup *app* :address "0.0.0.0"))
   (handler-case (bt:join-thread (find-if (lambda (th)
                                            (search "hunchentoot" (bt:thread-name th)))
                                          (bt:all-threads)))
