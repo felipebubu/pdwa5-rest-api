@@ -12,5 +12,3 @@
           (with-logged-as-admin
               (yason:with-output-to-string* () 
                 (yason:encode (admin-get-users))))))
-
-(declaim (optimize (debug 3) (speed 0) (space 0) (compilation-speed 0) (safety 3)))

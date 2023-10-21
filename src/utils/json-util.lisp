@@ -14,4 +14,3 @@
           "error" "entity not found")
          element)))
 
-(defmethod yason:encode-slots progn ((test cl:nil)))

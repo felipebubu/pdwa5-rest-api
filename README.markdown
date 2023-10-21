@@ -191,8 +191,8 @@ Requisições para a API devem seguir os padrões:
 
 ## GET endpoints
 
-### Retorna todos os usuários que fazem parte de um grupo
-### [GET /api/team/{grupo}/users]
+### Retorna todos os usuários cadastrados n
+### [GET /admin/users]
 
 + Request (application/json)
 
@@ -204,24 +204,38 @@ Requisições para a API devem seguir os padrões:
     + Body
 ```
 [
-    "bryan.claudio.ramos@portalpublicidade.com.br",
-    "enzoleandrocastro@yahoo.de",
-    "simone_marcia_peixoto@atualmarcenaria.com.br"
+   {
+        "name": "felipe",
+        "password": "senha-forte",
+        "email": "felipe@felipe.com",
+        "status": "active",
+        "kind": "admin",
+    },
+    {
+        "name": "felipe",
+        "password": "senha-forte",
+        "email": "felipe@felipe.com",
+        "status": "active",
+        "kind": "admin"
+    },
+    {
+        "name": "felipe",
+        "password": "senha-forte",
+        "email": "felipe@felipe.com",
+        "status": "active",
+        "kind": "admin"
+    },
 ]
 ```
 
 ## POST endpoints
 
-### Cria um time caso o usuário exista e nome seja válido
+### Retorna um token com poderes administrativos
 ### [POST /api/team/create]
 + Parameters
-    + name - *primeiro nome do usuário*
-
+    + email - *e-mail do administrador*
+    + password - *senha do administrador*
 + Request (application/json)
-
-    + Headers
-
-            X-Access-Token: token
 
 + Response 200 (application/json)
     + Body
@@ -237,100 +251,5 @@ Requisições para a API devem seguir os padrões:
 {
     "erro": 2,
     "mensagem":"Nome inválido"
-},
-```
-## PUT endpoints
-
-### Adiciona um usuário a um grupo de acesso
-### [PUT /api/team/add]
-+ Parameters
-    + email - *e-mail do usuário*
-    + team - *nome do grupo de acesso*
-
-+ Request (application/json)
-
-    + Headers
-
-            X-Access-Token: token
-
-+ Response 200 (application/json)
-    + Body
-```
-{
-    sucesso: 1,
-    mensagem: "Usuário adicionado ao grupo de acesso com sucesso"
-}
-```
-
-+ Response 400 (application/json)
-    + Body
-```
-{
-    "erro": 6,
-    "mensagem":"{usuário/grupo} não existe"
-}
-```
-
-+ Response 400 (application/json)
-    + Body
-```
-{
-    "erro": 5,
-    "mensagem":"Usuário já está no grupo de acesso"
-},
-```
-
-## DELETE endpoints
-
-### Remove um usuário de um grupo de acesso
-### [DELETE /api/team/{grupo}/delete/{email}]
-
-+ Request (application/json)
-
-    + Headers
-
-            X-Access-Token: token
-
-+ Response 200 (application/json)
-    + Body
-```
-{
-    "successo": 1,
-    "message": "Usuário removido do grupo com sucesso"
-},
-```
-+ Response 400 (application/json)
-    + Body
-```
-{
-    "erro": 4,
-    "mensagem":"Usuário não está no grupo de acesso"
-},
-```
-
-
-### Remove um grupo de acesso do sistema
-### [DELETE /api/team/{grupo}]
-
-+ Request (application/json)
-
-    + Headers
-
-            X-Access-Token: token
-
-+ Response 200 (application/json)
-    + Body
-```
-{
-    "successo": 1,
-    "message": "{usuário} deletado com sucesso"
-},
-```
-+ Response 400 (application/json)
-    + Body
-```
-{
-    "erro": 4,
-    "mensagem":"{usuário} não existe"
 },
 ```

@@ -12,7 +12,6 @@
 (defvar *app* (make-instance 'ningle:app))
 (defvar *server* nil)
 (defun main () (setf *server* (clack:clackup *app*))
-  (declaim (optimize (debug 3)))
   (handler-case (bt:join-thread (find-if (lambda (th)
                                            (search "hunchentoot" (bt:thread-name th)))
                                          (bt:all-threads)))

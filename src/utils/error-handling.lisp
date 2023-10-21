@@ -24,5 +24,3 @@
        (make-json-object-key-value
         "error" "entity not found")
        ,entity))
-
-(defun encode-if-not-nill)
