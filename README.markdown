@@ -46,7 +46,7 @@ Requisições para a API devem seguir os padrões:
 
 ## GET endpoints
 
-### Retorna todos os usuários ativos do sistema que participam de pelo menos um grupo de acesso 
+### Retorna um usuário
 ### [GET /user/{id}]
 
 + Request (application/json)
