@@ -5,7 +5,7 @@ API RESTful que fornece cadastro de usuários, livros e transações.
 * SBCL (Steel Bank Common Lisp)
 * Quicklisp
   
-## Link da aplicação
+## Link da aplicação (APENAS PROTOCOLO HTTP POR ORA)
 http://vps49843.publiccloud.com.br:5000
 
 ## Usando a aplicação localmente no GNU/Linux
@@ -176,7 +176,7 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwia2luZCI6InNlbGxlciJ9.cMNAieYJiZ
 ## POST endpoints
 
 ### Retorna um token com poderes administrativos
-### [POST /admin/login"]
+### [POST /admin/login]
 + Parameters
     + email - *e-mail do administrador*
     + password - *senha do administrador*
