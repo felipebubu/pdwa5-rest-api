@@ -350,12 +350,12 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwia2luZCI6InNlbGxlciJ9.cMNAieYJiZ
 ```
 [
   {
-      "1":1,
+      "id":1,
       "name":"ssssm",
       "description":"dfafsdfasdf",
   },
   {
-      "1":1,
+      "id":2,
       "name":"ssssm",
       "description":"dfafsdfasdf",
   }
@@ -374,7 +374,7 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwia2luZCI6InNlbGxlciJ9.cMNAieYJiZ
     + Body
 ```
 {
-    "1":1,
+    "id":1,
     "name":"ssssm",
     "description":"dfafsdfasdf",
 }
@@ -413,4 +413,56 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwia2luZCI6InNlbGxlciJ9.cMNAieYJiZ
 {
 
 }
+```
+# Transação
+
+## GET endpoints
+
+### Retorna todas as transações de um usuário
+### [GET /transaction/{id}]
+
++ Request (application/json)
+    + Headers
+        + Authorization: {token}
++ Response 200 (application/json)
+    + Body
+```
+[
+  {
+    "id":1,
+    "buyer-id":2,
+    "seller-id":3,
+    "item-id":4,
+    "price":5.4,
+  },
+  {
+    "id":2,
+    "buyer-id":2,
+    "seller-id":3,
+    "item-id":4,
+    "price":5.4,
+  },
+]
+```
+## POST endpoints
+
+### Cria uma transação
+### [POST /transaction]
++ Request (application/json)
+    + Body
+        + Parameters
+            + buyer-id - *nome da categoria*
+            + seller-id - *descrição da categoria*
+            + item-id - *id do item*
+            + price - *valor da transação*
++ Response 200 (application/json)
+    + Body
+```
+  {
+    "id":2,
+    "buyer-id":2,
+    "seller-id":3,
+    "item-id":4,
+    "price":5.4,
+  },
 ```
