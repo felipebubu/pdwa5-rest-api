@@ -187,3 +187,230 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwia2luZCI6InNlbGxlciJ9.cMNAieYJiZ
 ```
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwia2luZCI6InNlbGxlciJ9.cMNAieYJiZgOewKulhyoIqUiikhnrhjz6mr8LpRVdHo
 ```
+
+# Item
+
+## GET endpoints
+
+### Retorna um item
+### [GET /item/{id}]
+
++ Request (application/json)
+    + Headers
+        + Authorization: {token}
++ Response 200 (application/json)
+    + Body
+```
+{
+    "title":"felipe",
+    "author":"seller@seller.com",
+    "price":"ativo",
+    "kind":"seller",
+    "description":"seller",
+    "status":"seller",
+    "frequency":"seller",
+    "seller-id":"seller",
+}
+```
+### Retorna todos os itens
+### [GET /item]
+
++ Request (application/json)
+    + Headers
+        + Authorization: {token}
++ Response 200 (application/json)
+    + Body
+```
+[
+  {
+      "id":1,
+      "title":"felipe",
+      "author":"seller@seller.com",
+      "price":"ativo",
+      "kind":"seller",
+      "description":"seller",
+      "status":"seller",
+      "frequency":"seller",
+      "seller-id":"seller",
+  },
+  {
+      "id":2,
+      "title":"felipe",
+      "author":"seller@seller.com",
+      "price":"ativo",
+      "kind":"seller",
+      "description":"seller",
+      "status":"seller",
+      "frequency":"seller",
+      "seller-id":"seller",
+  },
+]
+```
+## POST endpoints
+
+### Cria um item
+### [POST /item]
++ Request (application/json)
+    + Body
+        + Parameters
+            + title - *nome do usuário*
+            + author - *senha do usuário*
+            + price - *e-mail do usuário*
+            + kind - *tipo de usuário, podendo ser "admin", "buyer", ou "seller"*
+            + price - *preço*
+            + description - *descrição*
+            + status - *status*
+            + frequency - *periodicidade*
+            + seller-id - *id do vendedor*
++ Response 200 (application/json)
+    + Body
+```
+{
+    "id":1,
+    "title":"felipe",
+    "author":"seller@seller.com",
+    "price":"ativo",
+    "kind":"seller",
+    "description":"seller",
+    "status":"seller",
+    "frequency":"seller",
+    "seller-id":"seller",
+}
+```
+
+## PUT endpoints
+
+### Edita um item
+### [PUT /item/{id}]
++ Request (application/json)
+    + Headers
+        + Authorization: {token}
+    + Body
+        + Parameters
+            + title - *nome do usuário*
+            + author - *senha do usuário*
+            + price - *e-mail do usuário*
+            + kind - *tipo de usuário, podendo ser "admin", "buyer", ou "seller"*
+            + price - *preço*
+            + description - *descrição*
+            + status - *status*
+            + frequency - *periodicidade*
+            + seller-id - *id do vendedor*
++ Response 200 (application/json)
+    + Body
+```
+{
+
+}
+```
+
+## DELETE endpoints
+
+### Remove um item do sistema
+### [DELETE /item/{id}]
+
++ Request (application/json)
+    + Headers
+        + Authorization: {token}
++ Response 200 (application/json)
+    + Body
+```
+{
+
+}
+```
+
+# Categoria
+
+## GET endpoints
+
+### Retorna uma categoria
+### [GET /category/{id}]
+
++ Request (application/json)
+    + Headers
+        + Authorization: {token}
++ Response 200 (application/json)
+    + Body
+```
+{
+    "1":1,
+    "name":"ssssm",
+    "description":"dfafsdfasdf",
+}
+```
+### Retorna todas as categorias
+### [GET /category]
+
++ Request (application/json)
+    + Headers
+        + Authorization: {token}
++ Response 200 (application/json)
+    + Body
+```
+[
+  {
+      "1":1,
+      "name":"ssssm",
+      "description":"dfafsdfasdf",
+  },
+  {
+      "1":1,
+      "name":"ssssm",
+      "description":"dfafsdfasdf",
+  }
+]
+```
+## POST endpoints
+
+### Cria uma categoria
+### [POST /category]
++ Request (application/json)
+    + Body
+        + Parameters
+            + name - *nome da categoria*
+            + description - *descrição da categoria*
++ Response 200 (application/json)
+    + Body
+```
+{
+    "1":1,
+    "name":"ssssm",
+    "description":"dfafsdfasdf",
+}
+```
+
+## PUT endpoints
+
+### Edita uma categoria
+### [PUT /category/{id}]
++ Request (application/json)
+    + Headers
+        + Authorization: {token}
+    + Body
+        + Parameters
+            + name - *nome da categoria*
+            + description - *descrição da categoria*
++ Response 200 (application/json)
+    + Body
+```
+{
+
+}
+```
+
+## DELETE endpoints
+
+### Remove uma categoria
+### [DELETE /category/{id}]
+
++ Request (application/json)
+    + Headers
+        + Authorization: {token}
++ Response 200 (application/json)
+    + Body
+```
+{
+
+}
+```
